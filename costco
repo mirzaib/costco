@@ -1,0 +1,26 @@
+import cv2
+import numpy as np
+
+# Load image
+image = cv2.imread("barcode_image.jpg")
+
+# Convert to grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Use the EAN-13 detector from the zbar library
+barcode_detector = cv2.QRCodeDetector()
+data, bbox, rectified_image = barcode_detector.detectAndDecode(gray)
+
+# Draw the bounding box around the barcode
+for i in range(len(bbox)):
+    p1 = tuple(bbox[i][0:2])
+    p2 = tuple(bbox[(i + 1) % len(bbox)][0:2])
+    cv2.line(image, p1, p2, (255, 0, 0), 2)
+
+# Display the image with the barcode box
+cv2.imshow("Barcode", image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Print the decoded barcode data
+print("Barcode data:", data)
